@@ -1,14 +1,13 @@
-#常用
+#常用   
 ##全局
-------
+
     Command + Shift + P / F1 显示命令面板
     Comman d + P 快速打开
     Command + Shift + N 打开新窗口
     Command + W 关闭窗口
 	
-    
 ##基本
--------
+
     Command + X 剪切（未选中文本的情况下，剪切光标所在行）
     Command + C 复制（未选中文本的情况下，复制光标所在行）
     Option + Up 向上移动行
