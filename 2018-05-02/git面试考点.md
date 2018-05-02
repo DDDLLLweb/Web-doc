@@ -1,3 +1,4 @@
+[Git DOCUMENT](https://git-scm.com/book/en/v2)
 >  git add 和 git stage 区别
    >> 其实两个是同义的，引入git stage 的原因是因为与svn add 区分，两者的功能是完全不一样的，svn add 是将某个文件加入版本控制，而git add 是将某个文件加入暂存区
 ---
