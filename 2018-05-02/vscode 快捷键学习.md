@@ -1,5 +1,5 @@
- # 常用  
- ## 全局
+ # 常用    
+## 全局
 
     Command + Shift + P / F1 显示命令面板
     Comman d + P 快速打开
