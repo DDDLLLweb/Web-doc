@@ -1,5 +1,5 @@
  # 常用    
-## 全局
+ ## 全局
 
     Command + Shift + P / F1 显示命令面板
     Comman d + P 快速打开
@@ -152,5 +152,3 @@
     PgDown 向下翻页
     Command + Home 滚动到顶部
     Command + End 滚动到底部
-1. git add 和 git stage 区别
-    
