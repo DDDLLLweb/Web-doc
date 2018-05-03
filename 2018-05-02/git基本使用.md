@@ -25,10 +25,10 @@
 + 第二步，使用命令git commit，完成。    
 * 简单解释一下git commit命令，-m后面输入的是本次提交的说明，可以输入任意内容，当然最好是有意义的，这样你就能从历史记录里方便地找到改动记录
 我们使用 git clone 从现有 Git 仓库中拷贝项目（类似 svn checkout）   
+
 克隆仓库的命令格式为：  
-
-    git clone <repo>
-
+    
+     git clone <repo>
 克隆到指定的目录
 
     git clone <repo> <directory>
@@ -63,4 +63,39 @@ git diff 命令显示已写入缓存与已修改但尚未写入缓存的改动�
 - 尚未缓存的改动：git diff
 - 查看已缓存的改动： git diff --cached
 - 查看已缓存的与未缓存的所有改动：git diff HEAD
-- 显示摘要而非整个 diff：git diff --sta
+- 显示摘要而非整个 diff：git diff --stat
+### git commit
+使用 git add 命令将想要快照的内容写入缓存区， 而执行 git commit 将缓存区内容添加到仓库中。
+### git reset HEAD
+git reset HEAD 命令用于取消已缓存的内容
+### git rm
+如果只是简单地从工作目录中手工删除文件，运行 git status 时就会在 Changes not staged for commit 的提示。   
+要从 Git 中移除某个文件，就必须要从已跟踪文件清单中移除，然后提交。可以用以下命令完成此项工作 
+
+    git rm <file>
+如果删除之前修改过并且已经放到暂存区域的话，则必须要用强制删除选项 -f
+
+    git rm -f <file>
+如果把文件从暂存区域移除，但仍然希望保留在当前工作目录中，换句话说，仅是从跟踪清单中删除，使用 --cached 选项即可    
+
+    git rm --cached <file>
+### git mv
+git mv 命令用于移动或重命名一个文件、目录、软连接
+
+    $ git mv README  README.md   #重命名
+# git分支
+创建分支命令：
+
+    git branch (branchname)
+切换分支命令:
+
+    git checkout (branchname)
+当你切换分支的时候，Git 会用该分支的最后提交的快照替换你的工作目录的内容， 所以多个分支不需要多个目录。    
+删除分支命令：
+
+    git branch -d (branchname)
+合并分支命令:
+
+    git merge 
+你可以多次合并到统一分支， 也可以选择在合并之后直接删除被并入的分支。
+
