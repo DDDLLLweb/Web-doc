@@ -68,10 +68,10 @@ void open(
    optional string password
 );
 ```
->method：表示HTTP动词，比如“GET”、“POST”、“PUT”和“DELETE”。
->url: 表示请求发送的网址。
->async: 格式为布尔值，默认为true(异步)，表示请求是否为异步。如果设为false，则send()方法只有等到收到服务器返回的结果，才会有返回值。
->user：表示用于认证的用户名，默认为空字符串。
+>method：表示HTTP动词，比如“GET”、“POST”、“PUT”和“DELETE”。    
+>url: 表示请求发送的网址。    
+>async: 格式为布尔值，默认为true(异步)，表示请求是否为异步。如果设为false，则send()方法只有等到收到服务器返回的结果，才会有返回值。    
+>user：表示用于认证的用户名，默认为空字符串。    
 >password：表示用于认证的密码，默认为空字符串
 ## send()
 send方法用于实际发出HTTP请求。如果不带参数，就表示HTTP请求只包含头信息，也就是只有一个URL，典型例子就是GET请求；如果带有参数，就表示除了头信息，还带有包含具体数据的信息体，典型例子就是POST请求。
@@ -100,13 +100,21 @@ withCredentals属性是一个布尔值，表示跨域请求时，用户信息（
 # 文件上传
 HTML网页的<form>元素能够以四种格式，向服务器发送数据。
 >使用POST方法，将enctype属性设为application/x-www-form-urlencoded，这是默认方法
-```<form action="register.php" method="post" onsubmit="AJAXSubmit(this); return false;"></form>```
+```js
+<form action="register.php" method="post" onsubmit="AJAXSubmit(this); return false;"></form>
+```
 >使用POST方法，将enctype属性设为text/plain。
-```<form action="register.php" method="post" enctype="text/plain" onsubmit="AJAXSubmit(this); return false;"></form>```
+```js
+<form action="register.php" method="post" enctype="text/plain" onsubmit="AJAXSubmit(this); return false;"></form>
+```
 >使用POST方法，将enctype属性设为multipart/form-data。
-```<form action="register.php" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this); return false;"></form>```
+```js
+<form action="register.php" method="post" enctype="multipart/form-data" onsubmit="AJAXSubmit(this); return false;"></form>
+```
 >使用GET方法，enctype属性将被忽略。
-```<form action="register.php" method="get" onsubmit="AJAXSubmit(this); return false;"></form>```
+```js
+<form action="register.php" method="get" onsubmit="AJAXSubmit(this); return false;"></form>
+```
 某个表单有两个字段，分别是foo和baz，其中foo字段的值等于bar，baz字段的值一个分为两行的字符串。上面四种方法，都可以将这个表单发送到服务器。  
 
 ## 使用file控件实现文件上传
