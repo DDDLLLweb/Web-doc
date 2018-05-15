@@ -191,3 +191,21 @@ Map 结构原生提供三个遍历器生成函数和一个遍历方法。
 - forEach()：遍历 Map 的所有成员。
  
 # 与其他数据结构的互相转换
+
+
+### 注意点
+ - 数组去重方法
+    var set = new Set(arr);
+    var arr = [...set];
+ - wekmap
+    主要用途 WeakMap 应用的典型场合就是 DOM 节点作为键名
+    ```js
+    let myElement = document.getElementById('logo');
+    let myWeakmap = new WeakMap();
+    myWeakmap.set(myElement, {timesClicked: 0});
+    myElement.addEventListener('click', function() {
+        let logoData = myWeakmap.get(myElement);
+        logoData.timesClicked++;
+      }, false);
+    ```
+    myElement是一个 DOM 节点，每当发生click事件，就更新一下状态。我们将这个状态作为键值放在 WeakMap 里，对应的键名就是myElement。一旦这个 DOM 节点删除，该状态就会自动消失，不存在内存泄漏风险。

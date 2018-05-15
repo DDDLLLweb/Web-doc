@@ -94,3 +94,66 @@ console.log(3);
 
 # 面试问题
  一个promise有多个then，如果第一个then出错，后面的还会执行吗，如何捕获异常。 如果第一个then出错了，我还想要后面的继续执行，应该怎么做？
+
+ ## promise 操作流程
+-  异步执行成功 resolve 处理结果集
+ new Promise((resolve,reject)=>{
+   setTimeout(function(){
+     console.log("====模拟异步方法执行，比如ajax=====");
+     resolve({a:113});
+     },3000)})
+     .then((data)=>{
+       console.log(data);
+       })
+     .catch((error)=>{
+       console.log(error);
+     });
+ - 异步执行失败 reject 处理错误信息 catch捕获异常
+ new Promise((resolve,reject)=>{setTimeout(function(){console.log("====异步方法执行，比如ajax");reject(new Error('ajax fail'));},3000)}).then((data)=>{console.log(data)}).catch((error)=>{console.log(error);});
+
+ ### 模拟ajax
+ new Promise((resolve,reject)=>{
+     console.log("====模拟异步方法执行，比如ajax=====");
+     $.ajax({
+       url:'api',
+       data:{},
+       success:function(data) {
+          resolve(data);
+       },
+       error: function(error) {
+         reject(error);
+       }
+     });
+ }).then((data)=>{
+       console.log(data);
+       })
+     .catch((error)=>{
+       console.log(error);
+     });
+ ### finally 
+ promise.finally(() => {
+  // 语句
+ });
+ // 等同于
+ promise
+  .then(
+   result => {
+     // 语句
+     return result;
+   },
+   error => {
+     // 语句
+     throw error;
+   }
+  );
+  - all 方法
+  Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。并发执行多个异步方法，当所有的异步方法都是fullfilled，此promise对象才是fullfilled，否则就是reject。
+
+  - race方法
+  Promise.race方法同样是将多个 Promise 实例，包装成一个新的 Promise 实例。
+  ```js
+  const p = Promise.race([p1, p2, p3]);
+  ```
+上面代码中，只要p1、p2、p3之中有一个实例率先改变状态，p的状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给p的回调函数。
+
+Promise.race方法的参数与Promise.all方法一样，如果不是 Promise 实例，就会先调用下面讲到的Promise.resolve方法，将参数转为 Promise 实例，再进一步处理。
