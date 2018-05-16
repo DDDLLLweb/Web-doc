@@ -97,6 +97,7 @@ console.log(3);
 
  ## promise 操作流程
 -  异步执行成功 resolve 处理结果集
+ ```js
  new Promise((resolve,reject)=>{
    setTimeout(function(){
      console.log("====模拟异步方法执行，比如ajax=====");
@@ -108,10 +109,24 @@ console.log(3);
      .catch((error)=>{
        console.log(error);
      });
+```
  - 异步执行失败 reject 处理错误信息 catch捕获异常
- new Promise((resolve,reject)=>{setTimeout(function(){console.log("====异步方法执行，比如ajax");reject(new Error('ajax fail'));},3000)}).then((data)=>{console.log(data)}).catch((error)=>{console.log(error);});
-
+ ```js
+new Promise((resolve,reject)=>{
+    setTimeout(function(){
+      console.log("====异步方法执行，比如ajax");
+      reject(new Error('ajax fail'));
+    },3000)
+})
+.then((data)=>{
+  console.log(data)
+})
+.catch((error)=>{
+  console.log(error);
+});
+```
  ### 模拟ajax
+ ```js
  new Promise((resolve,reject)=>{
      console.log("====模拟异步方法执行，比如ajax=====");
      $.ajax({
@@ -130,7 +145,9 @@ console.log(3);
      .catch((error)=>{
        console.log(error);
      });
+```
  ### finally 
+ ```js
  promise.finally(() => {
   // 语句
  });
@@ -146,6 +163,7 @@ console.log(3);
      throw error;
    }
   );
+  ```
   - all 方法
   Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。并发执行多个异步方法，当所有的异步方法都是fullfilled，此promise对象才是fullfilled，否则就是reject。
 

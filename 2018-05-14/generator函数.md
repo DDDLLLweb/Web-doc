@@ -186,3 +186,28 @@ Generator 函数不是这样，它执行产生的上下文环境，一旦遇到y
 - Generator 函数
 - Thunk 函数
 - co 模块 
+
+
+### 温习
+  - for...of循环可以自动遍历 Generator 函数时生成的Iterator对象，且此时不再需要调用next方法。
+  一旦next方法的返回对象的done属性为true，for...of循环就会中止，且不包含该返回对象，
+  - 所谓异步： 不连续执行的任务
+
+手写ajax
+```js
+var xhr = new XMLHttpRequest();
+xhr.onreadystatechange= function(){
+  if(xhr.readystate === 4){
+      if(xhr.status === 200){
+         console.log(xhr.responseText);
+      }else{
+          console.log(xhr.statusText);
+      }
+  }
+  xhr.onError = function(){
+    console.error(xhr.statusText);
+  }
+  xhr.open('get',url,false);
+  xhr.send();
+
+}
