@@ -207,7 +207,7 @@ xhr.onreadystatechange= function(){
   xhr.onError = function(){
     console.error(xhr.statusText);
   }
-  xhr.open('get',url,false);
+  xhr.open('get',url,true);
   xhr.send();
 
 }
