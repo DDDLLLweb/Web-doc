@@ -43,4 +43,18 @@
         文件系统的隔离:每个容器都有自己的root文件系统。
         进程隔离:每个容器都运行在自己的进程环境中。
         网络隔离: 使用cgroups将CPU和内存之类的资源独立分配给每个Docker容器
+### 容器的基本操作
+    $ docker run -i -t IMAGE /bin/bash
+        -i 用来告诉docker的守护进程为容器打开标准输入
+        -t 为容器创建一个伪tty终端
+    $ docker ps -a | -l
+      不加参数 表示正在运行的容器
+      -a 所有的容器
+      -l 最新运行的容器
+    $ docker inspect cn_id | cn_name
+      返回容器的参数信息
+    $ docker run --name = 自定义名称 -i -t
+      为容器自定义名称
+    $ docker start [-i] 容器名
+      重新启动停止的容器
     
