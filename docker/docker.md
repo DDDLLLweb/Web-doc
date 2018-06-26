@@ -57,4 +57,17 @@
       为容器自定义名称
     $ docker start [-i] 容器名
       重新启动停止的容器
+### 守护式容器 
+创建守护式进程的方式
+1，ctrl+p|q 退出运行时容器
+2，docker run --name dc1 -d ubuntu /bin/sh -c "while true; do echo hello world; sleep     1; done" 
+查看容器log
+docker logs -tf --tail 0 dc1
+-t 查看时间
+-f 最新的log
+--tail 最新的多少行
+查看容器内进程
+docker top 容器名
+在容器内运行其他容器
+docker exec -i[-d] -t 容器名
     
