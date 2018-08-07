@@ -70,4 +70,17 @@ docker logs -tf --tail 0 dc1
 docker top 容器名
 在容器内运行其他容器
 docker exec -i[-d] -t 容器名
+
+### 搭建web服务
+1,暴露80端口: docker run -p 80 -i -t ubuntu /bin/bash
+2,apt-get update
+同步 /etc/apt/sources.list 和 /etc/apt/sources.list.d 中列出的源的索引，这样才能获取到最新的软件包。
+3,apt-get install -y nginx
+
+### docker cs 模式
+
+
+
+
+
     
