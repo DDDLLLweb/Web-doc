@@ -256,6 +256,58 @@ Promise.all([p1, p2])
 
 Promise.race方法的参数与Promise.all方法一样，如果不是 Promise 实例，就会先调用下面讲到的Promise.resolve方法，将参数转为 Promise 实例，再进一步处理。
 
+ ## promise 操作流程
+ -  异步执行成功 resolve 处理结果集
+  ```js
+  new Promise((resolve,reject)=>{
+    setTimeout(function(){
+      console.log("====模拟异步方法执行，比如ajax=====");
+      resolve({a:113});
+      },3000)})
+      .then((data)=>{
+        console.log(data);
+        })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+```
+异步执行失败 reject 处理错误信息 catch捕获异常
+  ```js
+ new Promise((resolve,reject)=>{
+     setTimeout(function(){
+       console.log("====异步方法执行，比如ajax");
+       reject(new Error('ajax fail'));
+     },3000)
+ })
+ .then((data)=>{
+   console.log(data)
+ })
+ .catch((error)=>{
+   console.log(error);
+ });
+ ```
+### 模拟ajax
+  ```js
+  new Promise((resolve,reject)=>{
+      console.log("====模拟异步方法执行，比如ajax=====");
+      $.ajax({
+        url:'api',
+        data:{},
+        success:function(data) {
+           resolve(data);
+        },
+        error: function(error) {
+          reject(error);
+        }
+      });
+  }).then((data)=>{
+        console.log(data);
+        })
+      .catch((error)=>{
+        console.log(error);
+      });
+```
 # 面试问题
 1.一个promise有多个then，如果第一个then出错，后面的还会执行吗，如何捕获异常。 如果第一个then出错了，我还想要后面的继续执行，应该怎么做？
   （1）在第一个then后边写catch，然后在catch后边继续写then
@@ -339,4 +391,24 @@ console.log("4");//同步任务代码
   }).then(()=>{console.log('4');})
   .catch((e)=>{console.log(e);});
   //打印 1，3 ，error
+```
+
+4.如何利用promise实现一个图片的异步加载
+```js
+  function loadImg(url){
+    return new Promise(function(resove,reject){
+      const image = new Image();
+      image.onload = function(){
+        resolve(image);
+      };
+      image.onerror = function(){
+        reject(new Error("error"));
+      }
+      image.src = url;
+    })
+  }
+```
+5.实现promise.all方法
+```js
+
 ```
