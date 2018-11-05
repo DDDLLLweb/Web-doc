@@ -105,4 +105,9 @@
     1， 安装erlang依赖
      sudo yum install epel-release -y
      yum install erlang -y
-    2，
+-- 简介
+    MQ为message queue 消息队列是应用程序之间的通信方法
+    AMQP：即advanced Message Queuing Protocol一个提供统一消息服务的应用层标准高级消息队列协议，应用层协议的一个标准开放，为面向消息的中间件设计。
+    rabbit 是一个开源的，在AMQP基础上完整的，可复用的企业消息系统
+    支持主流的操作系统。
+ 

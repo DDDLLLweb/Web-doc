@@ -15,4 +15,20 @@ co模块约定，yield命令后面只能是 Thunk 函数或 Promise 对象，而
 （4）返回值是 Promise。         
 
 # 基本用法
-async函数返回一个 Promise 对象，可以使用then方法添加回调函数。当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句。
+async函数返回一个 Promise 对象，可以使用then方法添加回调函数。
+当函数执行的时候，一旦遇到await就会先返回，等到异步操作完成，再接着执行函数体内后面的语句。
+
+面试题
+指定多少毫秒后输出一个值
+```js
+    function timeout(ms){
+        return new Promise((resolve)=>{
+            setTimeout(resolve,ms);
+        });
+    }
+    async function asyncPrint(value,t){
+        await timeout(t);
+        console.log(value);
+    }
+    asyncPrint('hello world', 1000);
+```

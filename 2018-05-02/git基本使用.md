@@ -99,3 +99,8 @@ git mv 命令用于移动或重命名一个文件、目录、软连接
     git merge 
 你可以多次合并到统一分支， 也可以选择在合并之后直接删除被并入的分支。
 
+重命名本地分支：
+git branch -m devel develop
+
+git fetch 和git pull的区别
+git pull是拉下更新后就自动合并本地分支，而git fetch是先吧更新拉下来，在用merge或rebase进行合并

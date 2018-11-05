@@ -92,59 +92,102 @@ console.log(3);
 - 其次，如果不设置回调函数，Promise内部抛出的错误，不会反应到外部。
 - 第三，当处于pending状态时，无法得知目前进展到哪一个阶段（刚刚开始还是即将完成）。
 
-# 面试问题
- 一个promise有多个then，如果第一个then出错，后面的还会执行吗，如何捕获异常。 如果第一个then出错了，我还想要后面的继续执行，应该怎么做？
+## 基本用法
+Promise构造函数接受一个函数作为参数，该函数的两个参数分别是resolve和reject。它们是两个函数，由 JavaScript 引擎提供，不用自己部署.       
+resolve函数的作用是，将Promise对象的状态从“未完成”变为“成功”（即从 pending 变为 resolved），在异步操作成功时调用，并将异步操作的结果，作为参数传递出去；reject函数的作用是，将Promise对象的状态从“未完成”变为“失败”（即从 pending 变为 rejected），在异步操作失败时调用，并将异步操作报出的错误，作为参数传递出去。 
 
- ## promise 操作流程
--  异步执行成功 resolve 处理结果集
- ```js
- new Promise((resolve,reject)=>{
-   setTimeout(function(){
-     console.log("====模拟异步方法执行，比如ajax=====");
-     resolve({a:113});
-     },3000)})
-     .then((data)=>{
-       console.log(data);
-       })
-     .catch((error)=>{
-       console.log(error);
-     });
+Promise实例生成以后，可以用then方法分别指定resolved状态和rejected状态的回调函数。
+```js
+let promise = new Promise(function(resolve, reject) {
+  console.log('Promise');
+  resolve("完成啦");
+});
+
+promise.then(function(data) {
+  console.log('resolved.',data); //resolved. 完成啦
+});
 ```
- - 异步执行失败 reject 处理错误信息 catch捕获异常
- ```js
-new Promise((resolve,reject)=>{
-    setTimeout(function(){
-      console.log("====异步方法执行，比如ajax");
-      reject(new Error('ajax fail'));
-    },3000)
-})
-.then((data)=>{
-  console.log(data)
-})
-.catch((error)=>{
+### Promise.prototype.then()
+Promise实例具有then方法，thent方法是定义在原型对象上的,then方法的第一个参数是resolved状态的回调函数，第二个参数（可选）是rejected状态的回调函数
+then返回的是一个Promise实例，因此可以采用链式写法，即then方法后面再调用另一个then方法。
+### Promise.prototype.catch()
+```js
+// 写法一
+const promise = new Promise(function(resolve, reject) {
+  try {
+    throw new Error('test');
+  } catch(e) {
+    reject(e);
+  }
+});
+promise.catch(function(error) {
+  console.log(error);
+});
+
+// 写法二
+const promise = new Promise(function(resolve, reject) {
+  reject(new Error('test'));
+});
+promise.catch(function(error) {
   console.log(error);
 });
 ```
- ### 模拟ajax
- ```js
- new Promise((resolve,reject)=>{
-     console.log("====模拟异步方法执行，比如ajax=====");
-     $.ajax({
-       url:'api',
-       data:{},
-       success:function(data) {
-          resolve(data);
-       },
-       error: function(error) {
-         reject(error);
-       }
-     });
- }).then((data)=>{
-       console.log(data);
-       })
-     .catch((error)=>{
-       console.log(error);
-     });
+比较上面两种写法，可以发现reject方法的作用，等同于抛出错误。
+
+一般总是建议，Promise 对象后面要跟catch方法，这样可以处理 Promise 内部发生的错误。catch方法返回的还是一个 Promise 对象，因此后面还可以接着调用then方法。
+>注意：如果 Promise 状态已经变成resolved，再抛出错误是无效的
+一般来说，不要在then方法里面定义 Reject 状态的回调函数（即then的第二个参数），总是使用catch方法。
+```js
+// bad
+promise
+  .then(function(data) {
+    // success
+  }, function(err) {
+    // error
+  });
+
+// good
+promise
+  .then(function(data) { //cb
+    // success
+  })
+  .catch(function(err) {
+    // error
+  });
+```
+### Promise.prototype.finally()
+finally方法用于指定不管 Promise 对象最后状态如何，都会执行的操作。该方法是 ES2018 引入标准的.
+
+finally方法的回调函数不接受任何参数，这意味着没有办法知道，前面的 Promise 状态到底是fulfilled还是rejected。这表明，finally方法里面的操作，应该是与状态无关的，不依赖于 Promise 的执行结果。
+
+finally本质上是then方法的特例
+```js
+promise.finally(()=>{
+  //要执行的语句
+})
+//等同于
+promise.then(
+  result=>{
+    //要执行的语句
+    return result;
+  },
+  error=>{
+    //要执行的语句
+    return error;
+  }
+)
+```
+  如果不使用finally方法，同样的语句需要为成功和失败两种情况各写一次。有了finally方法，则只需要写一次
+#### finally的实现
+
+```js
+Promise.prototype.finally = function (callback) {
+  let P = this.constructor;
+  return this.then(
+    value  => P.resolve(callback()).then(() => value),
+    reason => P.resolve(callback()).then(() => { throw reason })
+  );
+};
 ```
  ### finally 
  ```js
@@ -164,9 +207,46 @@ new Promise((resolve,reject)=>{
    }
   );
   ```
+  ### Promise.all()
   - all 方法
-  Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。并发执行多个异步方法，当所有的异步方法都是fullfilled，此promise对象才是fullfilled，否则就是reject。
+Promise.all方法用于将多个 Promise 实例，包装成一个新的 Promise 实例。并发执行多个异步方法，当所有的异步方法都是fullfilled，此promise对象才是fullfilled，否则就是reject。
+```js
+const p1 = new Promise((resolve, reject) => {
+  resolve('hello');
+})
+.then(result => result);
 
+
+const p2 = new Promise((resolve, reject) => {
+  resolve("world");
+})
+.then(result => result);
+
+Promise.all([p1, p2])
+.then(result => console.log(result))
+.catch(e => console.log(e));
+//["hello", "world"]
+```
+如果作为参数的 Promise 实例，自己定义了catch方法，那么它一旦被rejected，并不会触发Promise.all()的catch方法。
+```js
+const p1 = new Promise((resolve, reject) => {
+  resolve('hello');
+})
+.then(result => result)
+.catch(e => e);
+
+const p2 = new Promise((resolve, reject) => {
+  throw new Error('报错了');
+})
+.then(result => result)
+.catch(e => e);
+
+Promise.all([p1, p2])
+.then(result => console.log(result))
+.catch(e => console.log(e));
+// ["hello", Error: 报错了]
+```
+  ### Promise.race()
   - race方法
   Promise.race方法同样是将多个 Promise 实例，包装成一个新的 Promise 实例。
   ```js
@@ -175,3 +255,160 @@ new Promise((resolve,reject)=>{
 上面代码中，只要p1、p2、p3之中有一个实例率先改变状态，p的状态就跟着改变。那个率先改变的 Promise 实例的返回值，就传递给p的回调函数。
 
 Promise.race方法的参数与Promise.all方法一样，如果不是 Promise 实例，就会先调用下面讲到的Promise.resolve方法，将参数转为 Promise 实例，再进一步处理。
+
+ ## promise 操作流程
+ -  异步执行成功 resolve 处理结果集
+  ```js
+  new Promise((resolve,reject)=>{
+    setTimeout(function(){
+      console.log("====模拟异步方法执行，比如ajax=====");
+      resolve({a:113});
+      },3000)})
+      .then((data)=>{
+        console.log(data);
+        })
+      .catch((error)=>{
+        console.log(error);
+      });
+  }
+```
+异步执行失败 reject 处理错误信息 catch捕获异常
+  ```js
+ new Promise((resolve,reject)=>{
+     setTimeout(function(){
+       console.log("====异步方法执行，比如ajax");
+       reject(new Error('ajax fail'));
+     },3000)
+ })
+ .then((data)=>{
+   console.log(data)
+ })
+ .catch((error)=>{
+   console.log(error);
+ });
+ ```
+### 模拟ajax
+  ```js
+  new Promise((resolve,reject)=>{
+      console.log("====模拟异步方法执行，比如ajax=====");
+      $.ajax({
+        url:'api',
+        data:{},
+        success:function(data) {
+           resolve(data);
+        },
+        error: function(error) {
+          reject(error);
+        }
+      });
+  }).then((data)=>{
+        console.log(data);
+        })
+      .catch((error)=>{
+        console.log(error);
+      });
+```
+# 面试问题
+1.一个promise有多个then，如果第一个then出错，后面的还会执行吗，如何捕获异常。 如果第一个then出错了，我还想要后面的继续执行，应该怎么做？
+  （1）在第一个then后边写catch，然后在catch后边继续写then
+  （2）finally方法执行你想要执行的动作
+
+
+2.说出下列代码的打印顺序以及原理
+```js
+setTimeout(function() {
+  console.log(1);
+}, 0);
+new Promise(function (resolve, reject) {
+  console.log(2);//同步任务代码
+  setTimeout(function() {
+    resolve(3);
+  }, 0);
+  
+}).then((res)=>{
+  console.log(res);
+});
+console.log("4");//同步任务代码 
+//2
+//4
+//1
+//3
+```
+以上代码中 ：
+- 首先setTimeout，异步任务放入宏任务队列中
+- new Promise同步代码立即执行`console.log(2)`,
+- 又有一个setTimeout,继续放入宏任务队列中，
+- 由于resolve方法被放在setTimeout中了，微任务then将在setTimeout执行的时候才会执行
+- 接下来执行同步代码`console.log(4)`,
+- 这时候主线程的主任务（也就是宏任务中的同步任务）执行完毕
+- 开始事件循环，先执行宏任务，从任务队列中按照先进先出执行setTimeout,先打印1 后打印3
+
+3.实现一个方法 delay(timer).then(...)
+```js
+  function delay(t){
+    return new Promise((resolve,reject)=>{
+      setTimeout(resolve,t,'done');
+    })
+  }
+  delay(1000).then((data)=>{
+    console.log(data);
+  })
+```
+3.一个promise多个then，其中一个then报错，后边的就不会在执行，若想继续执行就要在出错的then后边写catch
+或者将想要执行的动作写在finally方法中
+```js
+  var promise = new Promise((resolve,reject)=>{
+    resolve(1);
+  });
+  promise
+  .then(res=>console.log(res))
+  .then(()=>{
+    x+2;
+  }).then(()=>{
+    console.log('3');
+  }) //打印1 然后报错
+```
+```js
+  var promise = new Promise((resolve,reject)=>{
+    resolve(1);
+  });
+  promise.then(res=>console.log(res))
+  .then(()=>{
+    x+2;
+  })
+  .catch((error)=>{console.log(error);})
+  .then(()=>{console.log('4');});
+  //打印1 打印错误 打印4
+//finally
+   var promise = new Promise((resolve,reject)=>{
+    resolve(1);
+  });
+  promise.then(res=>console.log(res))
+  .then(()=>{
+    x+2;
+  }).finally(()=>{
+    console.log('3');
+  }).then(()=>{console.log('4');})
+  .catch((e)=>{console.log(e);});
+  //打印 1，3 ，error
+```
+
+4.如何利用promise实现一个图片的异步加载
+```js
+  function loadImg(url){
+    return new Promise(function(resove,reject){
+      const image = new Image();
+      image.onload = function(){
+        resolve(image);
+      };
+      image.onerror = function(){
+        reject(new Error("error"));
+      }
+      image.src = url;
+    })
+  }
+```
+5.实现promise.all方法
+```js
+
+```
