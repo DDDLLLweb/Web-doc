@@ -44,3 +44,21 @@
 上述例子中，修改 o.value，可以通过引用找到原值，但是直接修改 o，并不会修改原值。所以第二个和第三个例子其实都是按共享传递。
 # 总结
 参数如果是基本类型是按值传递，如果是引用类型按共享传递。
+
+```js
+function changAge(person){
+    person.age = 25;
+    person = {
+        name:"jhon",
+        age:50
+    }
+    return person;
+}
+var personObj1 = {
+    name:"Alex",
+    age:30
+};
+var personObj2 = changAge(personObj1);
+console.log(personObj1);//{name: "Alex", age: 25}
+console.log(personObj2);//{name: "jhon", age: 50}
+```
