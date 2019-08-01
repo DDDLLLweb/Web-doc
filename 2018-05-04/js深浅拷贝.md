@@ -49,6 +49,33 @@
     console.log(new_arr);
 ```
 注意：此方法适用于数组和对象，但不能拷贝函数
+```js
+    var arr = [function(){
+        console.log(a)
+    }, {
+        b: function(){
+            console.log(b)
+        }
+    }]
+
+    var new_arr = JSON.parse(JSON.stringify(arr));
+
+    console.log(new_arr); //[null, Object]
+```
+# 对象的拷贝
+Object.assign，第一级属性深拷贝，以后级别属性浅拷贝
+```js
+    var obj = {'a':{'ac':'xixi'},'b':'haha'};
+    var newobj = Object.assign({}, obj);
+    newobj.a = 'heihei';
+    console.log(newobj);// {a: "heihei", b: "haha"}
+    console.log(obj);// {a:{'ac':'xixi'},b:'haha'};
+
+    var newobj1 = Object.assign({}, obj);
+    newobj1.a.ac = 'lalala';
+    console.log(newobj1); // {a: {ac: "lalala"}, b: "haha"}
+    console.log(obj); // {a: {ac: "lalala"}, b: "haha"}
+```
 
 # 浅拷贝的实现
 遍历对象，然后把属性和属性值都放在一个新的对象

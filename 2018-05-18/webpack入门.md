@@ -14,7 +14,7 @@ entry类型有三种：字符串，数组，对象。
 output 配置如何输出最终想要的代码。output 是一个 object，里面包含一系列配置项。
 
 filename 用于输出文件的文件名。
-path 目标输出目录的绝对路径，必须是绝对路径。
+path 目标输出目录的绝对路径·，必须是绝对路径。
 ## Module 模块和Loader 模块转换器
 module 配置如何处理模块
 
